@@ -36,6 +36,32 @@ describe('assert-err', function () {
     }
   })
 
+  it('should work with global Error', function (done) {
+    try {
+      assertErr(false, Error, 'boom')
+      done(new Error('expected an error'))
+    } catch (err) {
+      expect(err).to.be.an.instanceOf(Error)
+      expect(err.message).to.deep.equal('boom')
+      expect(err.stack.split('\n')[1]).to.match(/assert-err.test.js:/)
+      done()
+    }
+  })
+
+  it('should assign props if using global Error', function (done) {
+    try {
+      var props = { data: { foo: 'hey' } }
+      assertErr(false, Error, 'boom', props)
+      done(new Error('expected an error'))
+    } catch (err) {
+      expect(err).to.be.an.instanceOf(Error)
+      expect(err.message).to.deep.equal('boom')
+      expect(err.data).to.deep.equal(props.data)
+      expect(err.stack.split('\n')[1]).to.match(/assert-err.test.js:/)
+      done()
+    }
+  })
+
   times(6, function (i) {
     // generated tests
     it('should throw if assertion is false (' + i + ' args)', function (done) {
@@ -47,7 +73,7 @@ describe('assert-err', function () {
       } catch (err) {
         expect(err).to.be.an.instanceOf(CustomError)
         expect(err.args).to.deep.equal(errArgs)
-        //stack should start at assertErr line
+        // stack should start at assertErr line
         expect(err.stack.split('\n')[1]).to.match(/assert-err.test.js:/)
         done()
       }
