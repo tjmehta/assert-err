@@ -32,7 +32,13 @@ TypeError: "b" must be a number
     at node.js:999:3
 */
 ```
-#### Example 2: args
+#### Example 2: Error props
+If using global.Error, assertErr accepts a `props` argument to extend `error`
+```js
+assertErr(false, Error, 'message', { code: 1, status: 'status' }) // 0 args
+// { [Error: boom] code: 1, status: 'status' }
+```
+#### Example 3: args
 assertErr supports up to 5 err constructor args
 ```js
 assertErr(false, CustomError) // 0 args
